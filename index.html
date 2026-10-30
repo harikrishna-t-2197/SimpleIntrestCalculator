@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simple Interest Calculator</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: system-ui, sans-serif;
+        color: #172033;
+        background: #f3f6fb;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        box-sizing: border-box;
+      }
+
+      main {
+        width: min(100%, 28rem);
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 0.75rem 2rem #1720331a;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 1.75rem;
+      }
+
+      p {
+        color: #536078;
+        line-height: 1.5;
+      }
+
+      form {
+        display: grid;
+        gap: 1rem;
+      }
+
+      label {
+        display: grid;
+        gap: 0.4rem;
+        font-weight: 600;
+      }
+
+      input {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #aeb8c9;
+        border-radius: 0.5rem;
+        font: inherit;
+      }
+
+      input:focus {
+        outline: 3px solid #2459d3;
+        outline-offset: 2px;
+      }
+
+      button {
+        padding: 0.8rem 1rem;
+        border: 0;
+        border-radius: 0.5rem;
+        background: #2459d3;
+        color: white;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #1946ad;
+      }
+
+      #results {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background: #edf3ff;
+      }
+
+      #results[hidden] {
+        display: none;
+      }
+
+      #results p {
+        margin: 0.4rem 0;
+      }
+
+      .result-value {
+        color: #172033;
+        font-weight: 700;
+      }
+
+      @media (max-width: 32rem) {
+        main {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Simple Interest Calculator</h1>
+      <p>Enter a principal amount, annual interest rate, and time period to estimate your simple interest.</p>
+
+      <form id="calculator">
+        <label for="principal">Principal amount</label>
+        <input id="principal" name="principal" type="number" min="0" step="any" required>
+
+        <label for="rate">Annual interest rate (%)</label>
+        <input id="rate" name="rate" type="number" min="0" step="any" required>
+
+        <label for="time">Time (years)</label>
+        <input id="time" name="time" type="number" min="0" step="any" required>
+
+        <button type="submit">Calculate interest</button>
+      </form>
+
+      <section id="results" aria-live="polite" hidden>
+        <p>Simple interest: <span id="interest" class="result-value"></span></p>
+        <p>Total amount: <span id="total" class="result-value"></span></p>
+      </section>
+    </main>
+
+    <script>
+      const form = document.querySelector("#calculator");
+      const results = document.querySelector("#results");
+      const interestOutput = document.querySelector("#interest");
+      const totalOutput = document.querySelector("#total");
+      const numberFormat = new Intl.NumberFormat(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const principal = Number(form.elements.principal.value);
+        const annualRate = Number(form.elements.rate.value);
+        const years = Number(form.elements.time.value);
+
+        if (
+          !Number.isFinite(principal) ||
+          !Number.isFinite(annualRate) ||
+          !Number.isFinite(years) ||
+          principal <= 0 ||
+          annualRate < 0 ||
+          years <= 0
+        ) {
+          return;
+        }
+
+        const interest = (principal * annualRate * years) / 100;
+        interestOutput.textContent = numberFormat.format(interest);
+        totalOutput.textContent = numberFormat.format(principal + interest);
+        results.hidden = false;
+      });
+    </script>
+  </body>
+</html>
